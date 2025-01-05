@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Math Questions Solver</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.0/dist/katex.min.css" />
+    <!-- Google Icons for Buttons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        /* Custom Styles */
+        .text-gradient {
+            background: linear-gradient(90deg, #ff7e5f, #feb47b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .shadow-xl {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .hover-effect:hover {
+            transform: translateY(-3px);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #4f46e5;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 min-h-screen flex flex-col justify-center items-center font-sans">
+    <div class="max-w-3xl w-full mx-auto p-4">
+        <h1 class="text-5xl font-extrabold text-center mb-8 text-gradient">
+            AI Math Problem Solver
+        </h1>
+
+        <!-- Permissions Step -->
+        <div id="step0" class="step active bg-white rounded-xl shadow-xl p-8 mb-6 transition-all hover-effect">
+            <h2 class="text-2xl font-semibold mb-4">Camera Permission Required</h2>
+            <p class="mb-6 text-gray-600">We need access to your camera to capture the math problem. Please click the button below to grant permission.</p>
+            <button id="grantPermissions" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105">
+                <span class="material-icons">camera_alt</span> Grant Permissions
+            </button>
+        </div>
+        
+        <!-- Camera Step -->
+        <div id="step1" class="step bg-white rounded-xl shadow-xl p-8 mb-6 hidden hover-effect">
+            <div class="camera-container mb-4 flex justify-center">
+                <video id="video" autoplay playsinline class="rounded-xl shadow-md w-full max-w-xl"></video>
+                <canvas id="canvas" class="hidden"></canvas>
+                <img id="photoPreview" class="w-full hidden rounded-xl shadow-md" alt="Captured math problem">
+            </div>
+
+            <div class="controls flex justify-center gap-6">
+                <button id="captureBtn" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105">
+                    <span class="material-icons">camera</span> Capture Image
+                </button>
+                <input type="file" id="fileInput" accept="image/*" class="hidden">
+                <button id="uploadBtn" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-300 ease-in-out transform hover:scale-105">
+                    <span class="material-icons">upload</span> Upload Image
+                </button>
+            </div>
+        </div>
+
+        <!-- Processing Step -->
+        <div id="step2" class="step bg-white rounded-xl shadow-xl p-8 mb-6 hidden hover-effect">
+            <h2 class="text-2xl font-semibold mb-4">Processing Image...</h2>
+            <div class="flex justify-center items-center">
+                <div class="spinner" id="spinner"></div>
+            </div>
+            <div id="errorMessage" class="hidden mt-4 p-4 bg-red-100 text-red-700 rounded-lg text-center"></div>
+            <button id="processButton" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105">
+                <span class="material-icons">calculate</span> Solve Problem
+            </button>
+        </div>
+
+        <!-- Result Step -->
+        <div id="step3" class="step bg-white rounded-xl shadow-xl p-8 mb-6 hidden hover-effect">
+            <h2 class="text-2xl font-semibold mb-4">Solution</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-medium text-lg mb-2">Captured Image:</h3>
+                    <img id="capturedImage" class="w-full rounded-xl shadow-lg" alt="Captured math problem">
+                </div>
+                <div>
+                    <h3 class="font-medium text-lg mb-2">Solution:</h3>
+                    <div id="solution" class="prose text-gray-700"></div>
+                </div>
+            </div>
+            <div class="mt-6 text-center">
+                <button id="startOver" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition duration-300 ease-in-out transform hover:scale-105">
+                    <span class="material-icons">refresh</span> Start Over
+                </button>
+                <button id="speakSolution" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105 mt-4">
+                    <span class="material-icons">volume_up</span> Speak Solution
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-white mt-8">
+        <p class="text-center">
+            Made with <span class="text-red-500">❤️</span> by Udhay and Ayush
+        </p>
+    </footer>
+
+    <script type="module" src="script.js"></script>
+    <!-- KaTeX JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.15.0/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</body>
+</html>
